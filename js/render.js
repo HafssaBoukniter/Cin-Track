@@ -113,3 +113,14 @@ export function renderModule(cinetrack){
     })
 };
 
+export function rechercheFiltrer(cinetrack,typeBtn="tous"){
+    const searchInput = document.getElementById("search").value.trim().toLowerCase();
+
+    const ct = cinetrack.filter(c =>{
+        const filtrerType = c.type === typeBtn || typeBtn === "tous";
+        const rechercher = c.title.toLowerCase().includes(searchInput); 
+
+        return rechercher && filtrerType;
+    });
+    renderCard(ct);
+}
