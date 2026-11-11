@@ -122,5 +122,38 @@ export function rechercheFiltrer(cinetrack,typeBtn="tous"){
 
         return rechercher && filtrerType;
     });
-    renderCard(ct);
+    return ct;
+}
+
+export function renderPagination(page,total){
+    const pagination = document.getElementById("pagination");
+
+    if(!pagination) return;
+
+    if(total <= 1){
+        pagination.innerHTML = "";
+        return;
+    }
+
+    let pages = "";
+
+    if(page > 1){
+        pages += `
+            <button type="button" data-page="${page - 1}" ${page <= 1 ? "disabled" : ""} class="px-4 py-2 rounded-lg bg-purple-400 text-white hover:bg-purple-600"><</button>
+        `;
+    }
+
+    for(let i = 1; i <= total; i++){
+        pages += `<button type="button" data-page="${i}" ${page == i ? "disabled" : ""} class="px-4 py-2 rounded-lg ${page === i ? "bg-purple-500" : "bg-purple-400"} text-white hover:bg-purple-600">${i}</button>
+
+        `;
+    }
+
+    if(page < total){
+        pages += `
+            <button type="button" data-page="${page + 1}" ${page >= total ? "disabled" : ""} class="px-4 py-2 rounded-lg bg-purple-400 text-white hover:bg-purple-600">></button>
+        `;
+    }
+
+    pagination.innerHTML = pages;
 }
