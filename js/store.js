@@ -30,3 +30,11 @@ export async function initialiser() {
 export function sauvegarder(cinetrack) {
     localStorage.setItem("cinetrack", JSON.stringify(cinetrack));
 }
+
+export function getFavorites(){
+    return JSON.parse(localStorage.getItem("favorites")) || [];
+}
+
+export function sauvegarderfavorites(favorites){
+    localStorage.setItem("favorites",JSON.stringify(favorites));
+}

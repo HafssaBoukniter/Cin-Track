@@ -1,10 +1,12 @@
-import { initialiser } from "./store.js";
-import { renderPagination, rechercheFiltrer, renderCard, renderModule } from "./render.js";
+import { getFavorites, initialiser,sauvegarderfavorites } from "./store.js";
+import { renderPagination, rechercheFiltrer, renderCard, renderModule, renderFavs } from "./render.js";
 
 let pageActuelle = 1;
 const limit = 8;
 
 const pagination = document.getElementById("pagination");
+const btnClear = document.getElementById("clear");
+
 
 async function afficher(){
     const cinetrack = await initialiser();
@@ -12,23 +14,57 @@ async function afficher(){
 
     let filmFiltrer = cinetrack;
 
+    let favList = getFavorites();
+
     const cards = document.getElementById("cards");
 
     function afficherPages(){
         const nbrPages = Math.ceil(filmFiltrer.length / limit);
-        const pages = filmFiltrer.slice((pageActuelle - 1) * 8, pageActuelle * 8);
+        const pages = filmFiltrer.slice((pageActuelle - 1) * limit, pageActuelle * limit);
 
         renderPagination(pageActuelle,nbrPages);
 
-        renderCard(pages);
+        renderCard(pages,favList);
+
+        const btnsFav = document.querySelectorAll(".btnFav");
+        btnsFav.forEach(btnFav =>{
+            btnFav.addEventListener("click",e =>{
+                e.stopPropagation();
+                const c = btnFav.closest(".cards");
+                c.classList.toggle("fav");
+
+                const img = c.querySelector("img").src;
+                const title = c.querySelector("h3").textContent;
+                const type = c.querySelector("[data-typefilm]").dataset.typefilm;
+
+                const film ={
+                    image : img,
+                    title : title,
+                    type : type
+                }
+
+                btnFav.innerHTML = `<i class="fa-solid fa-heart" style="color: rgb(255, 0, 0);"></i>`;
+
+                if(c.classList.contains("fav") ){
+                    if(!favList.some(fav => fav.title === title)){
+                        favList.push(film);
+                    }
+                    
+                }
+
+                renderFavs(favList);
+                sauvegarderfavorites(favList);
+            });
+        });
     }
 
     afficherPages();
 
     cards.addEventListener("click", (e) =>{
-            
-        const card =e.target.closest("[data-index]")
-        let id= card.dataset.index
+        const card =e.target.closest("[data-index]");
+        if(!card) return;
+
+        let id= card.dataset.index;
         let c = cinetrack.find(ca => ca.id == id);
 
         renderModule(c);
@@ -48,9 +84,9 @@ async function afficher(){
         btn.addEventListener("click",() =>{
             filmFiltrer = rechercheFiltrer(cinetrack,btn.dataset.type);
             bouttons.forEach(b =>{
-                b.classList.remove("bg-purple-600");
+                b.classList.remove("bg-purple-700");
             })
-            btn.classList.add("bg-purple-600");
+            btn.classList.add("bg-purple-700");
 
             pageActuelle = 1;
             afficherPages();
@@ -67,7 +103,39 @@ async function afficher(){
 
         afficherPages();
     });
+
+    document.getElementById("fav-container").addEventListener("click", e =>{
+        const btn = e.target.closest(".delete-fav");
+        const title = btn.dataset.title;
+
+        favList = favList.filter(fav => fav.title !== title);
+
+        const cards = document.querySelectorAll(".cards");
+        cards.forEach(card =>{
+            const cardTitle = card.querySelector("h3").textContent;
+
+            if(cardTitle === title){
+                card.classList.remove("fav");
+
+                const btnFav = card.querySelector(".btnFav");
+                if(btnFav){
+                    btnFav.innerHTML = `<i class="fa-regular fa-heart"></i>`;
+                }
+            }
+        })
+
+        sauvegarderfavorites(favList);
+        renderFavs(favList);
+    });
+
+    btnClear.addEventListener("click", () =>{
+        favList = [];
+        sauvegarderfavorites(favList);
+
+        renderFavs(favList);
+    });
+
+    renderFavs(favList);
 }
-    
 
 afficher();

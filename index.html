@@ -28,12 +28,12 @@
         </nav>
     </header>
     <!--main-->
-    <main class="w-full grid grid-cols-[1fr_300px] px-7 py-5 gap-5">
+    <main class="w-full grid grid-cols-[1fr_350px] px-7 py-5 gap-5">
         <section class="min-w-0">
             <!--filter-->
             <div class="flex flex-wrap items-center justify-between gap-4 mb-7">
                 <div class="flex flex-wrap gap-3">
-                    <button data-type="tous" class="filter-btn bg-purple-600 rounded-full px-6 py-3 font-semibold hover:bg-purple-500 transition">
+                    <button data-type="tous" class="filter-btn bg-purple-700 rounded-full px-6 py-3 font-semibold hover:bg-purple-500 transition">
                         <i class="fa-solid fa-border-all mr-2"></i>
                         Tous
                     </button>
@@ -67,13 +67,16 @@
         <!--favorites-->
         <aside class="w-full">
             <div class="bg-purple-800 border border-purple-700 rounded-xl p-5">
-                <div class="flex items-center justify-between border-b border-purple-600 pb-4 mb-5">
-                    <h2 class="text-xl font-bold">
-                        <i class="fa-solid fa-heart text-pink-500 mr-2"></i>
-                        Mes favoris
-                    </h2>
+                <div class="flex flex-col gap-2 border-b border-purple-600 mb-5">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-bold">
+                            <i class="fa-solid fa-heart text-pink-500 mr-2"></i>
+                            Mes favoris
+                        </h2>
 
-                    <span id="fav-count" class="bg-purple-500 rounded-full px-3 py-1 text-sm">0</span>
+                        <span id="fav-count" class="bg-purple-500 rounded-full px-3 py-1 text-sm">0</span>
+                    </div>
+                    <div class="text-gray-300 text-sm mb-2.5">Series : <span id="serie-count">0</span> | Movies : <span id="movie-count">0</span></div>
                 </div>
 
                 <div id="fav-container"></div>

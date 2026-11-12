@@ -1,15 +1,16 @@
-export function renderCard(cinetrack){
+export function renderCard(cinetrack,favList = []){
     const cards = document.getElementById("cards");
 
     cards.innerHTML = cinetrack.map(c =>{
         const {id,image,title,type,releaseYear} = c;
+        const isFav = favList.some(fav => fav.title === title);
 
         return `
-            <div id="card" data-index="${id}" class="bg-purple-900 border border-purple-800 rounded-xl overflow-hidden hover:border-purple-500 transition cursor-pointer">
+            <div id="card" data-index="${id}" class="cards bg-purple-900 border border-purple-800 rounded-xl overflow-hidden hover:border-purple-500 transition cursor-pointer">
                 <div class="relative">
-                    <img src=${image} class="w-full h-64">
-                    <button class="absolute top-3 right-3 text-white text-xl hover:text-red-500 transition">
-                        <i class="fa-regular fa-heart"></i>
+                    <img src=${image} class="w-full h-full object-cover">
+                    <button id="btn-fav" data-id="${id}" class="btnFav absolute top-3 right-3 text-white text-xl hover:text-red-500 transition">
+                        <i class="${isFav ? "fa-solid fa-heart text-red-500" : "fa-regular fa-heart"}"></i>
                     </button>
                 </div>
                 <div class="p-4">
@@ -19,7 +20,7 @@ export function renderCard(cinetrack){
                             <i class="fa-regular fa-calendar mr-1"></i>
                             ${releaseYear}
                         </span>
-                        <span class="bg-purple-600 text-white text-sm px-3 py-1 rounded-full">
+                        <span data-typefilm ="${type}" class="bg-purple-600 text-white text-sm px-3 py-1 rounded-full">
                             ${type}
                         </span>
                     </div>
@@ -41,12 +42,13 @@ export function renderModule(cinetrack){
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
 
+            <h2 class="text-3xl text-center mt-3 font-bold mb-1.5">${cinetrack.title}</h2>
+
             <div id="module-body" class="p-6 flex items-center gap-4">
                 <div>
                     <img src="${cinetrack.image}" class="w-full h-105 rounded-xl">
                 </div>
-                <div class="flex flex-col gap-4 mb-6">
-                    <h2 class="text-3xl font-bold mb-3">${cinetrack.title}</h2>
+                <div class="flex flex-col mb-6">
                     <div class="flex items-center gap-4 mb-6">
                         <span class="bg-purple-600 px-4 py-1 rounded-full text-sm">
                             ${cinetrack.type}
@@ -66,7 +68,17 @@ export function renderModule(cinetrack){
                                 ${cinetrack.seasons.join(", ")}
                             </p>
                         </div>
-                    ` : ""}
+                    ` : `
+                        <div class="mb-4">
+                            <p class="text-purple-400 font-semibold mb-1">
+                                <i class="fa-regular fa-clock"></i>
+                                Duration
+                            </p>
+                            <p class="text-gray-300">
+                                ${Math.floor(cinetrack.duration/60)} h ${Math.floor(cinetrack.duration%60)} min
+                            </p>
+                        </div>
+                    `}
                     
                     <div class="mb-4">
                         <p class="text-purple-400 font-semibold mb-1">
@@ -125,16 +137,19 @@ export function rechercheFiltrer(cinetrack,typeBtn="tous"){
     return ct;
 }
 
+
+
 export function renderPagination(page,total){
     const pagination = document.getElementById("pagination");
+   
 
     if(!pagination) return;
-
+  
     if(total <= 1){
         pagination.innerHTML = "";
         return;
     }
-
+    
     let pages = "";
 
     if(page > 1){
@@ -144,8 +159,8 @@ export function renderPagination(page,total){
     }
 
     for(let i = 1; i <= total; i++){
-        pages += `<button type="button" data-page="${i}" ${page == i ? "disabled" : ""} class="px-4 py-2 rounded-lg ${page === i ? "bg-purple-500" : "bg-purple-400"} text-white hover:bg-purple-600">${i}</button>
-
+        pages += `
+            <button type="button" data-page="${i}" ${page == i ? "disabled" : ""} class="px-4 py-2 rounded-lg ${page === i ? "bg-purple-500" : "bg-purple-400"} text-white hover:bg-purple-600">${i}</button>
         `;
     }
 
@@ -156,4 +171,50 @@ export function renderPagination(page,total){
     }
 
     pagination.innerHTML = pages;
+}
+
+export function renderFavs(favs){
+    const favContainer = document.getElementById("fav-container");
+    const favImpty = document.getElementById("fav-impty");
+    const favCount = document.getElementById("fav-count");
+    const clear = document.getElementById("clear");
+    const serieCount = document.getElementById("serie-count");
+    const movieCount = document.getElementById("movie-count");
+
+    favImpty.classList.toggle("hidden",favs.length > 0);
+    clear.classList.toggle("hidden",favs.length === 0);
+    favCount.textContent = favs.length;
+
+    const result = favs.reduce((t,fav) =>{
+        if(fav.type === "movie"){
+            t.movie++
+        }else{
+            t.serie++
+        }
+
+        return t;
+    },{
+        movie:0,
+        serie:0
+    });
+
+    movieCount.textContent = result.movie;
+    serieCount.textContent = result.serie;
+
+    return favContainer.innerHTML = favs.map(fav =>{
+        return `
+            <div id="fav-body" class="p-1 bg-purple-900 border border-purple-600 flex rounded-2xl justify-between mb-2">
+                <img src="${fav.image}" class="w-15 h-20 p-1 object-cover rounded-xl">
+                <div class="flex flex-col items-start flex-1 p-2">
+                    <h2 class="text-md text-left font-bold mb-1.5">${fav.title}</h2>
+                    <span class="bg-purple-600 px-3 py-1 rounded-full text-xs">
+                        ${fav.type}
+                    </span>
+                </div>
+                <button data-title = "${fav.title}" class="delete-fav text-white text-lg p-2 hover:text-black transition">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+        `;
+    }).join("");
 }
