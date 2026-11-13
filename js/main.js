@@ -6,6 +6,8 @@ const limit = 8;
 
 const pagination = document.getElementById("pagination");
 const btnClear = document.getElementById("clear");
+const favMenu = document.getElementById("fav-menu");
+const aside = document.getElementById("aside");
 
 
 async function afficher(){
@@ -17,6 +19,17 @@ async function afficher(){
     let favList = getFavorites();
 
     const cards = document.getElementById("cards");
+
+    const message = document.getElementById("message");
+
+    function afficherMessage(text){
+        message.textContent = text;
+        message.classList.remove("hidden");
+
+        setTimeout(() =>{
+            message.classList.add("hidden");
+        },3000);
+    }
 
     function afficherPages(){
         const nbrPages = Math.ceil(filmFiltrer.length / limit);
@@ -45,11 +58,11 @@ async function afficher(){
 
                 btnFav.innerHTML = `<i class="fa-solid fa-heart" style="color: rgb(255, 0, 0);"></i>`;
 
-                if(c.classList.contains("fav") ){
+                if(c.classList.contains("fav")){
                     if(!favList.some(fav => fav.title === title)){
                         favList.push(film);
+                        afficherMessage(`${film.type === "movie" ? "Film" : "Série"} ajouté aux favoris`);
                     }
-                    
                 }
 
                 renderFavs(favList);
@@ -116,6 +129,7 @@ async function afficher(){
 
             if(cardTitle === title){
                 card.classList.remove("fav");
+                afficherMessage("Favori supprimé !");
 
                 const btnFav = card.querySelector(".btnFav");
                 if(btnFav){
@@ -136,6 +150,17 @@ async function afficher(){
     });
 
     renderFavs(favList);
+
+    favMenu.addEventListener("click",e =>{
+        e.preventDefault();
+        aside.classList.toggle("hidden");
+        const icon = favMenu.querySelector("#fav-menu i");
+        if(icon.classList.contains("fa-heart")){
+            icon.classList.replace("fa-heart","fa-x");
+        }else{
+            icon.classList.replace("fa-x","fa-heart");
+        }
+    });
 }
 
 afficher();

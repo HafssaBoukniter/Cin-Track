@@ -12,37 +12,40 @@
 <body class="bg-purple-900 text-white min-h-screen">
     <!--hedaer-->
     <header class="border-b border-purple-800 text-white px-0">
-        <nav class="w-full px-7 py-5 flex items-center justify-between">
+        <nav class="w-full px-3 py-2 lg:px-7 lg:py-5 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3">
-                <i class="fa-solid fa-clapperboard text-3xl text-purple-500"></i>
+                <i class="fa-solid fa-clapperboard text-sm lg:text-3xl text-purple-500"></i>
                 <div>
-                    <h1 class="text-2xl font-bold">Ciné<span class="text-purple-500">Track</span></h1>
+                    <h1 class="text-sm md:text-xl lg:text-2xl font-bold">Ciné<span class="text-purple-500">Track</span></h1>
                 </div>
             </a>
-            <form id="form-recherche" class="w-125">
-                <div class="flex-1 flex items-center gap-3 bg-transparent border border-purple-600 rounded-xl px-4">
-                    <i class="fa-solid fa-magnifying-glass text-purple-400"></i>
-                    <input type="search" name="search" id="search" placeholder="Rechercher un film ou une série..." class="w-full bg-transparent outline-none py-4 text-white placeholder-gray-400">
+            <form id="form-recherche" class="w-70 lg:w-125">
+                <div class="flex-1 flex items-center gap-3 bg-transparent border border-purple-600 rounded-xl ms-5 lg:ms-0 px-3 lg:px-4">
+                    <i class="text-sm lg:text-2xl fa-solid fa-magnifying-glass text-purple-400"></i>
+                    <input type="search" name="search" id="search" placeholder="Rechercher un film ou une série..." class="w-full bg-transparent outline-none py-2 lg:py-4 text-white placeholder-gray-400">
                 </div>
             </form>
+            <button id="fav-menu" class="text-end md:hidden lg:hidden favorire-btn px-3 py-1 font-semibold">
+                <i class="text-sm fa-solid fa-heart"></i>
+            </button>
         </nav>
     </header>
     <!--main-->
-    <main class="w-full grid grid-cols-[1fr_350px] px-7 py-5 gap-5">
+    <main class="w-full flex flex-col-reverse md:grid md:grid-cols-[1fr_350px] px-7 py-5 gap-5">
         <section class="min-w-0">
             <!--filter-->
-            <div class="flex flex-wrap items-center justify-between gap-4 mb-7">
-                <div class="flex flex-wrap gap-3">
-                    <button data-type="tous" class="filter-btn bg-purple-700 rounded-full px-6 py-3 font-semibold hover:bg-purple-500 transition">
-                        <i class="fa-solid fa-border-all mr-2"></i>
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-4 lg:mb-7">
+                <div class="flex flex-wrap gap-1 lg:gap-3">
+                    <button data-type="tous" class="filter-btn bg-purple-700 rounded-full px-3 py-1 lg:px-6 lg:py-3 font-semibold hover:bg-purple-500 transition">
+                        <i class="text-sm lg:text-3xl fa-solid fa-border-all mr-2"></i>
                         Tous
                     </button>
-                    <button data-type="series" class="filter-btn rounded-full px-6 py-3 font-semibold hover:bg-purple-500 transition">
-                        <i class="fa-solid fa-tv mr-2"></i>
+                    <button data-type="series" class="filter-btn rounded-full px-3 py-1 lg:px-6 lg:py-3 font-semibold hover:bg-purple-500 transition">
+                        <i class="text-sm lg:text-3xl fa-solid fa-tv mr-2"></i>
                         Série
                     </button>
-                    <button data-type="movie" class="filter-btn rounded-full px-6 py-3 font-semibold hover:bg-purple-500 transition">
-                        <i class="fa-solid fa-film mr-2"></i>
+                    <button data-type="movie" class="filter-btn rounded-full px-3 py-1 lg:px-6 lg:py-3 font-semibold hover:bg-purple-500 transition">
+                        <i class="text-sm lg:text-3xl fa-solid fa-film mr-2"></i>
                         Movie
                     </button>
                 </div>
@@ -53,19 +56,16 @@
             <p id="error" class="hidden text-purple-300 py-10"></p>
             
             <!--movie/Serie-card-->
-            <div id="cards" class="grid grid-cols-4 gap-5">
+            <div id="cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                 
             </div>
-
-            <!--message-->
-            <p id="message" class="hidden text-center text-gray-400 py-12"></p>
 
             <!--pagination-->
             <section id="pagination" class="flex justify-center items-center gap-3 mt-8"></section>
         </section>
 
         <!--favorites-->
-        <aside class="w-full">
+        <aside id="aside" class="w-full hidden md:block lg:block">
             <div class="bg-purple-800 border border-purple-700 rounded-xl p-5">
                 <div class="flex flex-col gap-2 border-b border-purple-600 mb-5">
                     <div class="flex items-center justify-between">
@@ -90,6 +90,8 @@
                     Tout effacer
                 </button>
             </div>
+            <!--message-->
+            <p id="message" class="hidden text-center text-gray-400 py-12"></p>
         </aside>
     </main>
 
